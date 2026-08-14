@@ -1,0 +1,2953 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Amadeus Shop | Toko Online Nusantara</title>
+
+  <!-- Bootstrap 5 -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+
+    :root {
+      --bg: #f4f2ed;
+      --card: #fffdf9;
+      --soft: #e9e5dc;
+      --primary: #657467;
+      --primary-dark: #4c594e;
+      --accent: #a18b6b;
+      --text: #292c29;
+      --muted: #77786f;
+      --border: #ddd9cf;
+      --sidebar-width: 270px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", sans-serif;
+      overflow-x: hidden;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* =====================================================
+       LOADER
+    ===================================================== */
+
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #efede7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: .7s ease;
+    }
+
+    #loader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-inner {
+      text-align: center;
+    }
+
+    .culture-logo {
+      width: 125px;
+      height: 125px;
+      border-radius: 50%;
+      margin: auto;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid var(--accent);
+      animation: spin 7s linear infinite;
+    }
+
+    .culture-logo::before {
+      content: "✦";
+      color: var(--primary);
+      font-size: 62px;
+      animation: reverseSpin 7s linear infinite;
+    }
+
+    .culture-logo::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      border: 1px dashed var(--accent);
+    }
+
+    .loader-title {
+      font-family: "Playfair Display", serif;
+      font-size: 32px;
+      margin-top: 22px;
+      letter-spacing: 2px;
+    }
+
+    .loader-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .loader-track {
+      width: 230px;
+      height: 4px;
+      background: #d9d5cb;
+      margin: 20px auto;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+
+    .loader-progress {
+      width: 0;
+      height: 100%;
+      background: var(--primary);
+      animation: progress 2s ease forwards;
+    }
+
+    @keyframes progress {
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes reverseSpin {
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 2000;
+      background: rgba(255,253,249,.97);
+      border-right: 1px solid var(--border);
+      padding: 20px 15px;
+      overflow-y: auto;
+      transition: .35s ease;
+    }
+
+    /* SIDEBAR CLOSED */
+
+    .sidebar.closed {
+      width: 82px;
+    }
+
+    .sidebar.closed .brand-text,
+    .sidebar.closed .nav-text,
+    .sidebar.closed .nav-title,
+    .sidebar.closed .promo-box,
+    .sidebar.closed .user-info {
+      display: none;
+    }
+
+    .sidebar.closed .brand {
+      justify-content: center;
+    }
+
+    .sidebar.closed .side-link {
+      justify-content: center;
+    }
+
+    .sidebar.closed .side-link i {
+      margin: 0;
+    }
+
+    /* BRAND */
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 10px 22px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 20px;
+    }
+
+    .brand-logo {
+      min-width: 45px;
+      width: 45px;
+      height: 45px;
+      border-radius: 14px;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .brand h4 {
+      margin: 0;
+      font-family: "Playfair Display", serif;
+    }
+
+    .brand small {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      right: -15px;
+      top: 25px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+      cursor: pointer;
+    }
+
+    .nav-title {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: #999990;
+      margin: 18px 10px 8px;
+      font-weight: 700;
+    }
+
+    .side-link {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 12px;
+      margin: 4px 0;
+      border-radius: 13px;
+      color: #5d605a;
+      transition: .25s;
+      white-space: nowrap;
+    }
+
+    .side-link i {
+      font-size: 18px;
+      min-width: 20px;
+    }
+
+    .side-link:hover,
+    .side-link.active {
+      background: var(--primary);
+      color: white;
+      transform: translateX(2px);
+    }
+
+    .promo-box {
+      background: var(--soft);
+      padding: 18px;
+      border-radius: 18px;
+      margin-top: 22px;
+    }
+
+    .promo-box h6 {
+      font-weight: 700;
+    }
+
+    .promo-box p {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    .main {
+      margin-left: var(--sidebar-width);
+      transition: .35s ease;
+      min-height: 100vh;
+    }
+
+    .main.expanded {
+      margin-left: 82px;
+    }
+
+    /* =====================================================
+       TOPBAR
+    ===================================================== */
+
+    .topbar {
+      height: 76px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 0 4%;
+      background: rgba(255,253,249,.90);
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mobile-toggle {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: white;
+    }
+
+    .search {
+      width: min(550px, 60%);
+      position: relative;
+    }
+
+    .search input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #f4f2ed;
+      border-radius: 50px;
+      padding: 12px 45px 12px 18px;
+      outline: none;
+    }
+
+    .search i {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      color: var(--muted);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .top-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card);
+      position: relative;
+    }
+
+    .cart-number {
+      position: absolute;
+      right: -2px;
+      top: -3px;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--accent);
+      color: white;
+      font-size: 9px;
+    }
+
+    /* =====================================================
+       CONTAINER
+    ===================================================== */
+
+    .wide-container {
+      width: 93%;
+      max-width: 1750px;
+      margin: auto;
+    }
+
+    /* =====================================================
+       HERO
+    ===================================================== */
+
+    .hero {
+      margin-top: 32px;
+      min-height: 430px;
+      padding: 60px;
+      border-radius: 30px;
+      color: white;
+      overflow: hidden;
+      position: relative;
+
+      background:
+        linear-gradient(
+          100deg,
+          rgba(65,77,67,.96),
+          rgba(91,103,91,.80)
+        );
+    }
+
+    .hero::before {
+      content: "᯽";
+      position: absolute;
+      right: 8%;
+      top: 5%;
+      font-size: 280px;
+      opacity: .07;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      opacity: .8;
+    }
+
+    .hero h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(40px, 5vw, 72px);
+      line-height: 1.05;
+      margin: 18px 0;
+    }
+
+    .hero p {
+      color: #e4e6df;
+      max-width: 600px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn-shop {
+      border: none;
+      border-radius: 50px;
+      padding: 13px 25px;
+      background: #f4f0e7;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .btn-outline-soft {
+      border: 1px solid rgba(255,255,255,.5);
+      color: white;
+      border-radius: 50px;
+      padding: 12px 25px;
+    }
+
+    /* =====================================================
+       SECTION
+    ===================================================== */
+
+    .section {
+      padding-top: 65px;
+    }
+
+    .heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 25px;
+    }
+
+    .heading h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 33px;
+      margin: 0;
+    }
+
+    .heading p {
+      color: var(--muted);
+      margin: 5px 0 0;
+    }
+
+    /* =====================================================
+       CATEGORY
+    ===================================================== */
+
+    .category-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      text-align: center;
+      padding: 25px 10px;
+      transition: .3s;
+    }
+
+    .category-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,.07);
+    }
+
+    .category-icon {
+      width: 65px;
+      height: 65px;
+      margin: auto auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--soft);
+      border-radius: 20px;
+      color: var(--primary);
+      font-size: 27px;
+    }
+
+    .category-card small {
+      color: var(--muted);
+    }
+
+    /* =====================================================
+       ADVERTISING
+    ===================================================== */
+
+    .advertising {
+      margin-top: 55px;
+      padding: 35px;
+      border-radius: 25px;
+      background: #dfdcd2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .advertising h3 {
+      font-family: "Playfair Display", serif;
+      margin: 8px 0;
+    }
+
+    .ad-tag {
+      font-size: 9px;
+      padding: 5px 9px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.55);
+      letter-spacing: 1px;
+    }
+
+    /* =====================================================
+       PRODUCT
+    ===================================================== */
+
+    .product-card {
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      transition: .3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(0,0,0,.08);
+    }
+
+    .product-img {
+      height: 230px;
+      background: var(--soft);
+      overflow: hidden;
+    }
+
+    .product-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: .5s;
+    }
+
+    .product-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .discount {
+      position: absolute;
+      z-index: 2;
+      left: 12px;
+      top: 12px;
+      background: var(--accent);
+      color: white;
+      padding: 5px 9px;
+      border-radius: 20px;
+      font-size: 10px;
+    }
+
+    .product-content {
+      padding: 18px;
+    }
+
+    .product-content small {
+      color: var(--muted);
+    }
+
+    .product-content h5 {
+      font-size: 16px;
+      margin: 7px 0;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .old-price {
+      font-size: 11px;
+      color: #999;
+      text-decoration: line-through;
+      margin-left: 5px;
+    }
+
+    .rating {
+      font-size: 11px;
+      color: #a18b6b;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 7px;
+      margin-top: 13px;
+    }
+
+    .cart-btn {
+      flex: 1;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      color: white;
+      background: var(--primary);
+    }
+
+    .cart-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .wishlist {
+      width: 43px;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 10px;
+    }
+
+    .wishlist.liked {
+      background: #ece7dd;
+    }
+
+    /* =====================================================
+       PROMOTION
+    ===================================================== */
+
+    .promotion {
+      margin-top: 60px;
+      border-radius: 28px;
+      background: var(--primary-dark);
+      color: white;
+      padding: 45px;
+    }
+
+    .promotion h2 {
+      font-family: "Playfair Display", serif;
+      font-size: 40px;
+    }
+
+    .voucher {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 20px;
+      border: 1px dashed #c9cbc4;
+      border-radius: 8px;
+      letter-spacing: 2px;
+    }
+
+    /* =====================================================
+       FEATURE
+    ===================================================== */
+
+    .feature {
+      height: 100%;
+      padding: 28px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .feature i {
+      color: var(--primary);
+      font-size: 28px;
+    }
+
+    .feature h5 {
+      margin-top: 15px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       NEWSLETTER
+    ===================================================== */
+
+    .newsletter {
+      margin-top: 65px;
+      padding: 45px;
+      text-align: center;
+      background: #e6e2d8;
+      border-radius: 25px;
+    }
+
+    .newsletter h2 {
+      font-family: "Playfair Display", serif;
+    }
+
+    .newsletter-form {
+      display: flex;
+      max-width: 550px;
+      margin: 20px auto 0;
+      gap: 8px;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 13px 18px;
+      outline: none;
+    }
+
+    .newsletter-form button {
+      border: none;
+      padding: 0 25px;
+      border-radius: 50px;
+      background: var(--primary);
+      color: white;
+    }
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    footer {
+      margin-top: 70px;
+      background: #2b302b;
+      color: #ddd;
+      padding: 60px 0 25px;
+    }
+
+    footer h5 {
+      color: white;
+      font-family: "Playfair Display", serif;
+    }
+
+    footer p,
+    footer li {
+      color: #aeb2aa;
+      font-size: 13px;
+    }
+
+    footer ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    footer li {
+      margin: 8px 0;
+    }
+
+    footer a {
+      color: #aeb2aa;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    .copyright {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #424640;
+      text-align: center;
+      font-size: 12px;
+      color: #999d96;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media(max-width: 991px) {
+
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.mobile-open {
+        transform: translateX(0);
+      }
+
+      .main,
+      .main.expanded {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .search {
+        width: 55%;
+      }
+
+      .hero {
+        padding: 40px;
+      }
+
+    }
+
+    @media(max-width: 600px) {
+
+      .topbar {
+        gap: 7px;
+        padding: 0 3%;
+      }
+
+      .search {
+        width: 47%;
+      }
+
+      .search input {
+        font-size: 11px;
+      }
+
+      .top-btn {
+        width: 38px;
+        height: 38px;
+      }
+
+      .hero {
+        padding: 30px;
+        min-height: 430px;
+      }
+
+      .hero h1 {
+        font-size: 42px;
+      }
+
+      .advertising {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .newsletter-form {
+        flex-direction: column;
+      }
+
+      .newsletter-form button {
+        height: 45px;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     LOADER
+===================================================== -->
+
+<div id="loader">
+
+  <div class="loader-inner">
+
+    <div class="culture-logo"></div>
+
+    <div class="loader-title">
+      AMADEUS SHOP
+    </div>
+
+    <div class="loader-subtitle">
+      BELANJA MODERN • SENTUHAN NUSANTARA
+    </div>
+
+    <div class="loader-track">
+      <div class="loader-progress"></div>
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+  <button
+    class="sidebar-toggle"
+    onclick="toggleSidebar()"
+    title="Buka/Tutup Sidebar">
+
+    <i class="bi bi-chevron-left" id="sidebarIcon"></i>
+
+  </button>
+
+
+  <div class="brand">
+
+    <div class="brand-logo">
+      <i class="bi bi-bag-heart"></i>
+    </div>
+
+    <div class="brand-text">
+
+      <h4>Amadeus</h4>
+
+      <small>
+        SHOP • NUSANTARA
+      </small>
+
+    </div>
+
+  </div>
+
+
+  <div class="nav-title">
+    NAVIGASI
+  </div>
+
+
+  <a href="#home" class="side-link active">
+
+    <i class="bi bi-house"></i>
+
+    <span class="nav-text">
+      Beranda
+    </span>
+
+  </a>
+
+
+  <a href="#produk" class="side-link">
+
+    <i class="bi bi-grid"></i>
+
+    <span class="nav-text">
+      Produk
+    </span>
+
+  </a>
+
+
+  <a href="#kategori" class="side-link">
+
+    <i class="bi bi-collection"></i>
+
+    <span class="nav-text">
+      Kategori
+    </span>
+
+  </a>
+
+
+  <a href="#promo" class="side-link">
+
+    <i class="bi bi-percent"></i>
+
+    <span class="nav-text">
+      Promo
+    </span>
+
+  </a>
+
+
+  <a href="#iklan" class="side-link">
+
+    <i class="bi bi-megaphone"></i>
+
+    <span class="nav-text">
+      Iklan & Promosi
+    </span>
+
+  </a>
+
+
+  <div class="nav-title">
+    AKUN
+  </div>
+
+
+  <a href="#" class="side-link">
+
+    <i class="bi bi-person"></i>
+
+    <span class="nav-text">
+      Akun Saya
+    </span>
+
+  </a>
+
+
+  <a href="#" class="side-link">
+
+    <i class="bi bi-heart"></i>
+
+    <span class="nav-text">
+      Wishlist
+    </span>
+
+  </a>
+
+
+  <a href="#" class="side-link">
+
+    <i class="bi bi-receipt"></i>
+
+    <span class="nav-text">
+      Pesanan
+    </span>
+
+  </a>
+
+
+  <a href="#" class="side-link">
+
+    <i class="bi bi-headset"></i>
+
+    <span class="nav-text">
+      Bantuan
+    </span>
+
+  </a>
+
+
+  <!-- PROMO SELLER -->
+
+  <div class="promo-box">
+
+    <h6>
+      Pasang Iklan
+    </h6>
+
+    <p>
+      Promosikan produk dan brand Anda
+      kepada pengunjung Amadeus Shop.
+    </p>
+
+    <button
+      class="btn btn-dark btn-sm rounded-pill w-100"
+      onclick="openAdModal()">
+
+      Mulai Promosi
+
+    </button>
+
+  </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main" id="main">
+
+
+  <!-- ===================================================
+       TOPBAR
+  =================================================== -->
+
+  <header class="topbar">
+
+    <button
+      class="mobile-toggle"
+      onclick="toggleMobileSidebar()">
+
+      <i class="bi bi-list"></i>
+
+    </button>
+
+
+    <div class="search">
+
+      <input
+        type="search"
+        id="searchInput"
+        placeholder="Cari produk atau kategori..."
+        onkeyup="searchProducts()">
+
+      <i class="bi bi-search"></i>
+
+    </div>
+
+
+    <div class="top-actions">
+
+      <button
+        class="top-btn"
+        title="Notifikasi">
+
+        <i class="bi bi-bell"></i>
+
+      </button>
+
+
+      <button
+        class="top-btn"
+        title="Wishlist">
+
+        <i class="bi bi-heart"></i>
+
+      </button>
+
+
+      <button
+        class="top-btn"
+        onclick="openCart()"
+        title="Keranjang">
+
+        <i class="bi bi-bag"></i>
+
+        <span
+          class="cart-number"
+          id="cartNumber">
+
+          0
+
+        </span>
+
+      </button>
+
+    </div>
+
+  </header>
+
+
+  <div class="wide-container">
+
+
+    <!-- =================================================
+         HERO
+    ================================================= -->
+
+    <section
+      id="home"
+      class="hero">
+
+      <div class="hero-content">
+
+        <div class="hero-label">
+          KOLEKSI NUSANTARA 2026
+        </div>
+
+        <h1>
+          Belanja Elegan,
+          Tetap Berbudaya.
+        </h1>
+
+        <p>
+          Temukan fashion, kerajinan, aksesoris,
+          dekorasi rumah, elektronik, dan berbagai
+          produk pilihan dalam satu tempat.
+        </p>
+
+
+        <div class="hero-buttons">
+
+          <a
+            href="#produk"
+            class="btn-shop">
+
+            <i class="bi bi-bag"></i>
+            Belanja Sekarang
+
+          </a>
+
+
+          <a
+            href="#promo"
+            class="btn-outline-soft">
+
+            Lihat Promo
+
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         CATEGORY
+    ================================================= -->
+
+    <section
+      id="kategori"
+      class="section">
+
+      <div class="heading">
+
+        <div>
+
+          <h2>
+            Kategori Pilihan
+          </h2>
+
+          <p>
+            Jelajahi berbagai kategori produk.
+          </p>
+
+        </div>
+
+        <a
+          href="#produk"
+          class="text-dark">
+
+          Lihat Semua →
+
+        </a>
+
+      </div>
+
+
+      <div class="row g-3">
+
+
+        <div class="col-6 col-md-4 col-lg">
+
+          <div class="category-card">
+
+            <div class="category-icon">
+              <i class="bi bi-person-standing-dress"></i>
+            </div>
+
+            <h6>
+              Fashion
+            </h6>
+
+            <small>
+              128 Produk
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-lg">
+
+          <div class="category-card">
+
+            <div class="category-icon">
+              <i class="bi bi-house"></i>
+            </div>
+
+            <h6>
+              Rumah
+            </h6>
+
+            <small>
+              86 Produk
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-lg">
+
+          <div class="category-card">
+
+            <div class="category-icon">
+              <i class="bi bi-gem"></i>
+            </div>
+
+            <h6>
+              Aksesoris
+            </h6>
+
+            <small>
+              74 Produk
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-lg">
+
+          <div class="category-card">
+
+            <div class="category-icon">
+              <i class="bi bi-cup-hot"></i>
+            </div>
+
+            <h6>
+              Kuliner
+            </h6>
+
+            <small>
+              91 Produk
+            </small>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-md-4 col-lg">
+
+          <div class="category-card">
+
+            <div class="category-icon">
+              <i class="bi bi-phone"></i>
+            </div>
+
+            <h6>
+              Elektronik
+            </h6>
+
+            <small>
+              115 Produk
+            </small>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ADVERTISEMENT
+    ================================================= -->
+
+    <section
+      id="iklan"
+      class="advertising">
+
+      <div>
+
+        <span class="ad-tag">
+          RUANG IKLAN
+        </span>
+
+        <h3>
+          Promosikan Brand Anda
+        </h3>
+
+        <p class="mb-0 text-secondary">
+          Tingkatkan visibilitas produk melalui
+          ruang promosi Amadeus Shop.
+        </p>
+
+      </div>
+
+
+      <button
+        class="btn btn-dark rounded-pill px-4"
+        onclick="openAdModal()">
+
+        <i class="bi bi-megaphone"></i>
+        Pasang Iklan
+
+      </button>
+
+    </section>
+
+
+    <!-- =================================================
+         PRODUCTS
+    ================================================= -->
+
+    <section
+      id="produk"
+      class="section">
+
+      <div class="heading">
+
+        <div>
+
+          <h2>
+            Produk Terpopuler
+          </h2>
+
+          <p>
+            Produk pilihan untuk kebutuhan Anda.
+          </p>
+
+        </div>
+
+
+        <select
+          class="form-select rounded-pill w-auto">
+
+          <option>
+            Terpopuler
+          </option>
+
+          <option>
+            Terbaru
+          </option>
+
+          <option>
+            Harga Terendah
+          </option>
+
+          <option>
+            Harga Tertinggi
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div
+        class="row g-4"
+        id="productGrid">
+
+
+        <!-- PRODUCT 1 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <span class="discount">
+              -25%
+            </span>
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=80"
+                alt="Kemeja">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Fashion
+              </small>
+
+              <h5>
+                Kemeja Etnik Nusantara
+              </h5>
+
+              <div class="rating">
+                ★★★★★
+                <span class="text-secondary">
+                  4.9
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp189.000
+                </span>
+
+                <span class="old-price">
+                  Rp250.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 2 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <span class="discount">
+              -15%
+            </span>
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=800&q=80"
+                alt="Aksesoris">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Aksesoris
+              </small>
+
+              <h5>
+                Kalung Motif Tradisional
+              </h5>
+
+              <div class="rating">
+                ★★★★☆
+                <span class="text-secondary">
+                  4.7
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp129.000
+                </span>
+
+                <span class="old-price">
+                  Rp150.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 3 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=800&q=80"
+                alt="Tas">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Kerajinan
+              </small>
+
+              <h5>
+                Tas Anyaman Premium
+              </h5>
+
+              <div class="rating">
+                ★★★★★
+                <span class="text-secondary">
+                  4.8
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp215.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 4 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <span class="discount">
+              -20%
+            </span>
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=80"
+                alt="Sepatu">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Fashion
+              </small>
+
+              <h5>
+                Sneakers Amadeus Urban
+              </h5>
+
+              <div class="rating">
+                ★★★★★
+                <span class="text-secondary">
+                  4.9
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp399.000
+                </span>
+
+                <span class="old-price">
+                  Rp499.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 5 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1503602642458-232111445657?auto=format&fit=crop&w=800&q=80"
+                alt="Kursi">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Rumah
+              </small>
+
+              <h5>
+                Kursi Kayu Minimalis
+              </h5>
+
+              <div class="rating">
+                ★★★★☆
+                <span class="text-secondary">
+                  4.6
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp575.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 6 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <span class="discount">
+              -10%
+            </span>
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=800&q=80"
+                alt="Lampu">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Dekorasi
+              </small>
+
+              <h5>
+                Lampu Dekorasi Nusantara
+              </h5>
+
+              <div class="rating">
+                ★★★★★
+                <span class="text-secondary">
+                  4.8
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp245.000
+                </span>
+
+                <span class="old-price">
+                  Rp275.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 7 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80"
+                alt="Gadget">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Elektronik
+              </small>
+
+              <h5>
+                Smart Gadget Organizer
+              </h5>
+
+              <div class="rating">
+                ★★★★☆
+                <span class="text-secondary">
+                  4.7
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp179.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- PRODUCT 8 -->
+
+        <div
+          class="col-6 col-md-4 col-lg-3 product-item">
+
+          <div class="product-card">
+
+            <span class="discount">
+              -30%
+            </span>
+
+            <div class="product-img">
+
+              <img
+                src="https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=800&q=80"
+                alt="Natural Care">
+
+            </div>
+
+
+            <div class="product-content">
+
+              <small>
+                Perawatan
+              </small>
+
+              <h5>
+                Natural Care Nusantara
+              </h5>
+
+              <div class="rating">
+                ★★★★★
+                <span class="text-secondary">
+                  4.9
+                </span>
+              </div>
+
+              <div class="mt-2">
+
+                <span class="price">
+                  Rp99.000
+                </span>
+
+                <span class="old-price">
+                  Rp140.000
+                </span>
+
+              </div>
+
+
+              <div class="product-actions">
+
+                <button
+                  class="cart-btn"
+                  onclick="addCart()">
+
+                  <i class="bi bi-cart-plus"></i>
+                  Keranjang
+
+                </button>
+
+                <button
+                  class="wishlist"
+                  onclick="toggleWishlist(this)">
+
+                  <i class="bi bi-heart"></i>
+
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         PROMO
+    ================================================= -->
+
+    <section
+      id="promo"
+      class="promotion">
+
+      <div class="row align-items-center">
+
+        <div class="col-lg-8">
+
+          <span class="badge bg-light text-dark rounded-pill">
+            PROMO SPESIAL
+          </span>
+
+          <h2 class="mt-3">
+            Hemat hingga 40%
+          </h2>
+
+          <p class="text-white-50">
+            Gunakan kode voucher berikut untuk mendapatkan
+            harga spesial pada produk pilihan.
+          </p>
+
+          <div class="voucher">
+            AMADEUS40
+          </div>
+
+        </div>
+
+
+        <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+
+          <button
+            class="btn btn-light rounded-pill px-4 py-3"
+            onclick="copyVoucher()">
+
+            <i class="bi bi-copy"></i>
+            Salin Voucher
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         FEATURES
+    ================================================= -->
+
+    <section class="section">
+
+      <div class="heading">
+
+        <div>
+
+          <h2>
+            Keunggulan Amadeus Shop
+          </h2>
+
+          <p>
+            Dibuat untuk pengalaman belanja yang nyaman.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="row g-4">
+
+
+        <div class="col-md-3">
+
+          <div class="feature">
+
+            <i class="bi bi-shield-check"></i>
+
+            <h5>
+              Belanja Aman
+            </h5>
+
+            <p>
+              Sistem toko dirancang dengan pengalaman
+              belanja yang mudah dan nyaman.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+          <div class="feature">
+
+            <i class="bi bi-truck"></i>
+
+            <h5>
+              Pengiriman
+            </h5>
+
+            <p>
+              Siapkan pilihan pengiriman untuk berbagai
+              kebutuhan pelanggan.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+          <div class="feature">
+
+            <i class="bi bi-megaphone"></i>
+
+            <h5>
+              Promosi
+            </h5>
+
+            <p>
+              Ruang iklan dapat digunakan untuk menampilkan
+              produk dan kampanye brand.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+          <div class="feature">
+
+            <i class="bi bi-headset"></i>
+
+            <h5>
+              Customer Support
+            </h5>
+
+            <p>
+              Sediakan pusat bantuan untuk pelanggan
+              dan penjual.
+            </p>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         NEWSLETTER
+    ================================================= -->
+
+    <section class="newsletter">
+
+      <h2>
+        Jangan Lewatkan Promo
+      </h2>
+
+      <p class="text-secondary">
+        Dapatkan informasi promo dan produk terbaru.
+      </p>
+
+
+      <form
+        class="newsletter-form"
+        onsubmit="subscribe(event)">
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Masukkan email Anda"
+          required>
+
+        <button type="submit">
+          Berlangganan
+        </button>
+
+      </form>
+
+    </section>
+
+
+  </div>
+
+
+  <!-- =================================================
+       FOOTER
+  ================================================= -->
+
+  <footer>
+
+    <div class="wide-container">
+
+      <div class="row g-5">
+
+
+        <div class="col-lg-4">
+
+          <h5>
+            Amadeus Shop
+          </h5>
+
+          <p>
+            Toko online dengan konsep modern,
+            elegan, dan terinspirasi budaya Nusantara.
+          </p>
+
+
+          <div class="d-flex gap-2">
+
+            <a
+              href="#"
+              class="top-btn">
+
+              <i class="bi bi-instagram"></i>
+
+            </a>
+
+            <a
+              href="#"
+              class="top-btn">
+
+              <i class="bi bi-facebook"></i>
+
+            </a>
+
+            <a
+              href="#"
+              class="top-btn">
+
+              <i class="bi bi-tiktok"></i>
+
+            </a>
+
+            <a
+              href="#"
+              class="top-btn">
+
+              <i class="bi bi-youtube"></i>
+
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-6 col-lg-2">
+
+          <h5>
+            Belanja
+          </h5>
+
+          <ul>
+
+            <li>
+              <a href="#produk">
+                Produk
+              </a>
+            </li>
+
+            <li>
+              <a href="#kategori">
+                Fashion
+              </a>
+            </li>
+
+            <li>
+              <a href="#kategori">
+                Rumah
+              </a>
+            </li>
+
+            <li>
+              <a href="#kategori">
+                Elektronik
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+
+        <div class="col-6 col-lg-2">
+
+          <h5>
+            Bantuan
+          </h5>
+
+          <ul>
+
+            <li>
+              <a href="#">
+                FAQ
+              </a>
+            </li>
+
+            <li>
+              <a href="#">
+                Pembayaran
+              </a>
+            </li>
+
+            <li>
+              <a href="#">
+                Pengiriman
+              </a>
+            </li>
+
+            <li>
+              <a href="#">
+                Pengembalian
+              </a>
+            </li>
+
+          </ul>
+
+        </div>
+
+
+        <div class="col-lg-4">
+
+          <h5>
+            Untuk Penjual
+          </h5>
+
+          <p>
+            Jual produk Anda dan manfaatkan ruang promosi
+            Amadeus Shop untuk memperkenalkan brand.
+          </p>
+
+          <button
+            class="btn btn-light rounded-pill px-4"
+            onclick="openAdModal()">
+
+            Daftar Sebagai Penjual
+
+          </button>
+
+        </div>
+
+
+      </div>
+
+
+      <div class="copyright">
+
+        © 2026 Amadeus Shop —
+        Belanja Modern dengan Sentuhan Nusantara.
+
+      </div>
+
+    </div>
+
+  </footer>
+
+</main>
+
+
+<!-- =====================================================
+     MODAL IKLAN
+===================================================== -->
+
+<div
+  class="modal fade"
+  id="adModal"
+  tabindex="-1">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content border-0 rounded-4">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          <i class="bi bi-megaphone"></i>
+          Pasang Iklan
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <p class="text-secondary">
+          Isi informasi promosi Anda.
+        </p>
+
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Nama Brand
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Nama brand">
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Judul Iklan
+          </label>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Contoh: Promo Produk Baru">
+
+        </div>
+
+
+        <div class="mb-3">
+
+          <label class="form-label">
+            Jenis Promosi
+          </label>
+
+          <select class="form-select">
+
+            <option>
+              Banner Utama
+            </option>
+
+            <option>
+              Banner Produk
+            </option>
+
+            <option>
+              Produk Unggulan
+            </option>
+
+            <option>
+              Promo Kategori
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          class="btn btn-secondary rounded-pill"
+          data-bs-dismiss="modal">
+
+          Batal
+
+        </button>
+
+        <button
+          class="btn btn-dark rounded-pill"
+          onclick="submitAd()">
+
+          Kirim Promosi
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     CART MODAL
+===================================================== -->
+
+<div
+  class="modal fade"
+  id="cartModal"
+  tabindex="-1">
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content border-0 rounded-4">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+          <i class="bi bi-bag"></i>
+          Keranjang
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal">
+        </button>
+
+      </div>
+
+
+      <div class="modal-body text-center">
+
+        <i
+          class="bi bi-bag-x"
+          style="font-size:50px;color:#657467">
+        </i>
+
+        <h5 class="mt-3">
+          Keranjang Anda
+        </h5>
+
+        <p class="text-secondary">
+          Produk yang ditambahkan akan muncul di sini.
+        </p>
+
+        <div>
+          Jumlah produk:
+          <strong id="modalCartNumber">
+            0
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<script>
+
+  /* =====================================================
+     LOADER
+  ===================================================== */
+
+  window.addEventListener("load", function () {
+
+    setTimeout(function () {
+
+      document
+        .getElementById("loader")
+        .classList.add("hide");
+
+    }, 2100);
+
+  });
+
+
+  /* =====================================================
+     SIDEBAR DESKTOP
+  ===================================================== */
+
+  function toggleSidebar() {
+
+    const sidebar =
+      document.getElementById("sidebar");
+
+    const main =
+      document.getElementById("main");
+
+    const icon =
+      document.getElementById("sidebarIcon");
+
+
+    sidebar.classList.toggle("closed");
+
+    main.classList.toggle("expanded");
+
+
+    if (sidebar.classList.contains("closed")) {
+
+      icon.className =
+        "bi bi-chevron-right";
+
+    } else {
+
+      icon.className =
+        "bi bi-chevron-left";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     SIDEBAR MOBILE
+  ===================================================== */
+
+  function toggleMobileSidebar() {
+
+    document
+      .getElementById("sidebar")
+      .classList.toggle("mobile-open");
+
+  }
+
+
+  /* =====================================================
+     CART
+  ===================================================== */
+
+  let cart = 0;
+
+
+  function addCart() {
+
+    cart++;
+
+    document
+      .getElementById("cartNumber")
+      .innerText = cart;
+
+    showToast(
+      "Produk berhasil ditambahkan ke keranjang."
+    );
+
+  }
+
+
+  function openCart() {
+
+    document
+      .getElementById("modalCartNumber")
+      .innerText = cart;
+
+    new bootstrap.Modal(
+      document.getElementById("cartModal")
+    ).show();
+
+  }
+
+
+  /* =====================================================
+     WISHLIST
+  ===================================================== */
+
+  function toggleWishlist(button) {
+
+    button.classList.toggle("liked");
+
+    const icon =
+      button.querySelector("i");
+
+    if (button.classList.contains("liked")) {
+
+      icon.className =
+        "bi bi-heart-fill";
+
+      showToast(
+        "Produk ditambahkan ke wishlist."
+      );
+
+    } else {
+
+      icon.className =
+        "bi bi-heart";
+
+    }
+
+  }
+
+
+  /* =====================================================
+     SEARCH
+  ===================================================== */
+
+  function searchProducts() {
+
+    const query =
+      document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    document
+      .querySelectorAll(".product-item")
+      .forEach(function (item) {
+
+        const content =
+          item.innerText.toLowerCase();
+
+        if (content.includes(query)) {
+
+          item.style.display = "";
+
+        } else {
+
+          item.style.display = "none";
+
+        }
+
+      });
+
+  }
+
+
+  /* =====================================================
+     VOUCHER
+  ===================================================== */
+
+  function copyVoucher() {
+
+    navigator.clipboard
+      .writeText("AMADEUS40")
+      .then(function () {
+
+        showToast(
+          "Kode AMADEUS40 berhasil disalin."
+        );
+
+      });
+
+  }
+
+
+  /* =====================================================
+     NEWSLETTER
+  ===================================================== */
+
+  function subscribe(event) {
+
+    event.preventDefault();
+
+    const email =
+      document.getElementById("email").value;
+
+    showToast(
+      "Email " +
+      email +
+      " berhasil didaftarkan."
+    );
+
+    document
+      .getElementById("email")
+      .value = "";
+
+  }
+
+
+  /* =====================================================
+     ADVERTISEMENT MODAL
+  ===================================================== */
+
+  function openAdModal() {
+
+    new bootstrap.Modal(
+      document.getElementById("adModal")
+    ).show();
+
+  }
+
+
+  function submitAd() {
+
+    showToast(
+      "Permintaan promosi berhasil dikirim."
+    );
+
+    bootstrap.Modal
+      .getInstance(
+        document.getElementById("adModal")
+      )
+      .hide();
+
+  }
+
+
+  /* =====================================================
+     TOAST
+  ===================================================== */
+
+  function showToast(message) {
+
+    const toast =
+      document.createElement("div");
+
+    toast.innerHTML = `
+      <div style="
+        position:fixed;
+        right:20px;
+        bottom:20px;
+        z-index:99999;
+        background:#4c594e;
+        color:white;
+        padding:14px 20px;
+        border-radius:12px;
+        box-shadow:0 10px 30px rgba(0,0,0,.15);
+        font-size:13px;
+      ">
+        <i class="bi bi-check-circle"></i>
+        ${message}
+      </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    setTimeout(function () {
+
+      toast.remove();
+
+    }, 2500);
+
+  }
+
+
+  /* =====================================================
+     ACTIVE MENU
+  ===================================================== */
+
+  document
+    .querySelectorAll(".side-link")
+    .forEach(function (link) {
+
+      link.addEventListener(
+        "click",
+        function () {
+
+          document
+            .querySelectorAll(".side-link")
+            .forEach(function (item) {
+
+              item.classList.remove("active");
+
+            });
+
+          this.classList.add("active");
+
+
+          if (
+            window.innerWidth <= 991
+          ) {
+
+            document
+              .getElementById("sidebar")
+              .classList.remove("mobile-open");
+
+          }
+
+        }
+      );
+
+    });
+
+</script>
+
+</body>
+</html>
+```
